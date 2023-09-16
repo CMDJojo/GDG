@@ -84,12 +84,20 @@ func _on_area_2d_area_entered(area):
 	
 	if type == POWERUP_TYPE.SPEEDUP:
 		player.speed += 200
+		cooldown_target = player
+		prepare_cooldown(3)
 	elif type == POWERUP_TYPE.EVIL_SPEEDUP && other_player != null:
 		other_player.speed += 600
+		cooldown_target = other_player
+		prepare_cooldown(3)
 	elif type == POWERUP_TYPE.SLOWDOWN && other_player != null:
 		other_player.speed = 100
+		cooldown_target = other_player
+		prepare_cooldown(3)
 	elif type == POWERUP_TYPE.GHOST:
-		player.speed = 200
+		player.is_ghosted = true
+		cooldown_target = player
+		prepare_cooldown(5)
 		
 	elif type == POWERUP_TYPE.ERASER:
 		for x in player.get_children():
@@ -102,7 +110,9 @@ func _on_area_2d_area_entered(area):
 					other_player.remove_child(x)
 	
 	elif type == POWERUP_TYPE.STUN && other_player != null:
-		other_player.speed = 10
+		other_player.speed = 0
+		cooldown_target = other_player
+		prepare_cooldown(5)
 	
 	elif type == POWERUP_TYPE.GEM:
 		player.gems += 1
@@ -113,6 +123,20 @@ func prepare_cooldown(time):
 	remove_child($Sprite2D)
 	remove_child($Area2D)
 	$Timer.start(time)
+
+
+func _on_timer_timeout():
+	if type == POWERUP_TYPE.SPEEDUP:
+		cooldown_target.speed -= 200
+	elif type == POWERUP_TYPE.EVIL_SPEEDUP:
+		cooldown_target.speed -= 600
+	elif type == POWERUP_TYPE.SLOWDOWN:
+		cooldown_target.speed = 200
+	elif type == POWERUP_TYPE.GHOST:
+		cooldown_target.is_ghosted = false
+	elif type == POWERUP_TYPE.STUN:
+		cooldown_target.speed = 200
+	pass # Replace with function body.
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ayirj"]
@@ -136,3 +160,4 @@ debug_color = Color(0, 0.596078, 0.729412, 0.419608)
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
