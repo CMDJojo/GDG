@@ -6,6 +6,7 @@ script/source = "extends Node2D
 
 @export var color : Color
 @export var speed = 200
+@export var ang = PI
 
 # vid kollision
 func _on_area_2d_body_entered(body):
@@ -13,7 +14,7 @@ func _on_area_2d_body_entered(body):
 	if (body.get_parent() is Line2D):
 		var oppColor = body.get_parent().default_color
 		if color != oppColor or collisionLine.i > 100.0/speed:
-			speed = 0
+			die()
 
 func _draw():
 	var area = get_node(\"Area2D\")
@@ -21,6 +22,9 @@ func _draw():
 	var w = shape.extents.x
 	var h = shape.extents.y
 	draw_rect(Rect2(area.position - Vector2(w, h), shape.extents*2),color)
+
+func die():
+	speed = 0
 
 func switch_color(color):
 	color = Color.RED
@@ -30,8 +34,6 @@ func switch_color(color):
 [sub_resource type="GDScript" id="GDScript_wdbpk"]
 resource_name = "Script"
 script/source = "extends Node
-
-var ang = 0
 
 const lineScene = preload(\"res://Instances/CollisionLine.tscn\")
 
@@ -48,10 +50,12 @@ func _process(delta):
 func move(delta):
 	var speed = get_owner().speed
 	if (speed != 0):
+		var ang = get_owner().ang
 		var prevpos = get_owner().position
 		get_owner().position.x += delta*speed*cos(ang)
 		get_owner().position.y += delta*speed*(-sin(ang))
 		add_line(prevpos, get_owner().position)
+		
 func add_line(pos1, pos2):
 	var collisionLine = lineScene.instantiate()
 	collisionLine.color = get_owner().color
@@ -77,24 +81,29 @@ func handle_input():
 		down = Input.is_action_pressed(\"P2down\")
 	
 	var minang = PI/4
-		
+	var ang = get_owner().ang
+	var nextang = ang
+	
 	if left:
-		ang = 4*minang
+		nextang = 4*minang
 	if right:
-		ang = 0*minang
+		nextang = 0*minang
 	if up:
-		ang = 2*minang
+		nextang = 2*minang
 	if down:
-		ang = -2*minang
+		nextang = -2*minang
 	
 	if left and up:
-		ang = 3*minang
+		nextang = 3*minang
 	if right and up:
-		ang = 1*minang
+		nextang = 1*minang
 	if left and down:
-		ang = -3*minang
+		nextang = -3*minang
 	if right and down:
-		ang = -1*minang
+		nextang = -1*minang
+	
+	if (abs(nextang - ang) != PI):
+		get_owner().ang = nextang
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xlvm6"]
