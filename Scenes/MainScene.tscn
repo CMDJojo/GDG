@@ -43,6 +43,7 @@ time = 3
 min_x = -500
 min_y = -300
 max_y = 300
+size = 40
 
 [node name="Player2" parent="." instance=ExtResource("2_t0p6b")]
 position = Vector2(405, 1)

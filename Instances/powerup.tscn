@@ -38,6 +38,7 @@ func _process(delta):
 
 func _draw():
 	init_texture()
+	update_size()
 
 func init_texture():
 	var path = \"res://Images/\" + powerup_icon_name();
