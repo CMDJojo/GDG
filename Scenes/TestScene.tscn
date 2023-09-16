@@ -1,6 +1,5 @@
-[gd_scene load_steps=2 format=3 uid="uid://cmyf6jebq27ra"]
+[gd_scene load_steps=3 format=3 uid="uid://cmyf6jebq27ra"]
 
-[ext_resource type="PackedScene" uid="uid://d2bcvmnyoi3gy" path="res://Instances/powerup.tscn" id="1_vrraf"]
 [ext_resource type="PackedScene" uid="uid://c3otevrfkc37e" path="res://Instances/Player.tscn" id="2_idvnc"]
 [ext_resource type="PackedScene" uid="uid://cyc76pviwiqja" path="res://Instances/powerup_spawner.tscn" id="4_plpbc"]
 
@@ -9,13 +8,12 @@
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="PowerupSpawner" parent="." instance=ExtResource("4_plpbc")]
-time = 1
-probability = 1.0
+time = 3
 min_x = -500
 min_y = -300
 max_y = 300
+size = 40
 
 [node name="Player2" parent="." instance=ExtResource("2_idvnc")]
 position = Vector2(156, -98)
 color = Color(1, 0, 0, 1)
-size = 20
