@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://d2bcvmnyoi3gy"]
+[gd_scene load_steps=4 format=3 uid="uid://d2bcvmnyoi3gy"]
+
+[ext_resource type="Texture2D" uid="uid://cb6r1470c8kjb" path="res://Images/gem.svg" id="1_wj5a5"]
 
 [sub_resource type="GDScript" id="GDScript_rqplj"]
 script/source = "extends Node2D
@@ -6,7 +8,7 @@ script/source = "extends Node2D
 enum POWERUP_TYPE {SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM}
 
 @export var type: POWERUP_TYPE: set = set_type;
-@export var size = 100: set = set_size;
+@export var size: float = 100: set = set_size;
 
 var cooldown_target
 
@@ -16,8 +18,11 @@ func set_size(new_size):
 
 func update_size():
 	#print(size)
-	get_node(\"Area2D/CollisionShape2D\").shape.size = Vector2(size, size)
-	get_node(\"Sprite2D\").scale = Vector2(size / 100, size / 100)
+	var cs = get_node(\"Area2D/CollisionShape2D\")
+	var s2 = get_node(\"Sprite2D\")
+	if cs != null && s2 != null:
+		cs.shape.size = Vector2(size, size)
+		s2.scale = Vector2(size / 100, size / 100)
 	pass
 
 func set_type(new_type):
@@ -42,8 +47,11 @@ func _draw():
 
 func init_texture():
 	var path = \"res://Images/\" + powerup_icon_name();
+	print(path)
 	var texture = load(path)
-	$Sprite2D.texture = texture
+	var node = get_node(\"Sprite2D\")
+	if node != null:
+		node.texture = texture
 
 func powerup_icon_name():
 	#SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM
@@ -112,9 +120,11 @@ size = Vector2(100, 100)
 
 [node name="Powerup" type="Node2D"]
 script = SubResource("GDScript_rqplj")
+type = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(2.08165e-12, 2.08165e-12)
+texture = ExtResource("1_wj5a5")
 
 [node name="Area2D" type="Area2D" parent="."]
 
