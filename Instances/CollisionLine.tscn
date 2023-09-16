@@ -5,9 +5,13 @@ resource_name = "CollisionLine"
 script/source = "extends Node2D
 
 var color = Color.WHITE
+var i = 0
 
 func _ready():
 	get_node(\"Line2D\").default_color = color
+
+func _process(delta):
+	i += delta
 "
 
 [sub_resource type="GDScript" id="GDScript_vkbt8"]

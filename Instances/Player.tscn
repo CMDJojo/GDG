@@ -10,7 +10,11 @@ script/source = "extends Node2D
 
 # vid kollision
 func _on_area_2d_body_entered(body):
-	print(body.get_parent().default_color)
+	var collisionLine = body.get_parent().get_parent()
+	if (body.get_parent() is Line2D):
+		var oppColor = body.get_parent().default_color
+		if color != oppColor or collisionLine.i > 100:
+			color = Color.RED
 "
 
 [sub_resource type="GDScript" id="GDScript_wdbpk"]
