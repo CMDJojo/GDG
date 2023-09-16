@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2bcvmnyoi3gy"]
+
+[ext_resource type="Texture2D" uid="uid://hipfxkko321h" path="res://Images/powerup1.svg" id="1_w6p3y"]
+
+[sub_resource type="GDScript" id="GDScript_rqplj"]
+script/source = "extends Node2D
+
+enum POWERUP_TYPE {SPEEDUP, SLOWDOWN, GHOST, ERASER, GEM}
+
+@export var type: POWERUP_TYPE;
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+
+func _draw():
+	var path = \"res://Images/\" + powerup_icon();
+	var texture = load(path)
+	$Sprite2D.texture = texture
+
+func powerup_icon():
+	if type == POWERUP_TYPE.SPEEDUP:
+		return \"powerup1.svg\"
+	else:
+		return \"powerup2.svg\"
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ayirj"]
+size = Vector2(100, 100)
+
+[node name="Powerup" type="Node2D"]
+script = SubResource("GDScript_rqplj")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_ayirj")
+debug_color = Color(0, 0.596078, 0.729412, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(2.08165e-12, 2.08165e-12)
+texture = ExtResource("1_w6p3y")
