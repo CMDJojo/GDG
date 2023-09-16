@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=3 uid="uid://cyc76pviwiqja"]
+
+[sub_resource type="GDScript" id="GDScript_t3dg4"]
+script/source = "extends Node
+
+
+#signal spawn(x, y, type)
+
+enum POWERUP_TYPE {SPEEDUP, SLOWDOWN, GHOST, ERASER, GEM}
+
+@export var time: int = 5
+@export var probability: float = 0.5
+@export var min_x: int = 0
+@export var max_x: int = 500
+@export var min_y: int = 0
+@export var max_y: int = 500
+
+var random
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	$Timer.wait_time = time
+	$Timer.start(-1)
+	random = RandomNumberGenerator.new()
+	random.randomize()
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+
+
+func _on_timer_timeout():
+	var r = random.randf()
+	if r < probability:
+		var x = random.randf_range(min_x, max_x)
+		var y = random.randf_range(min_y, max_y)
+		var type = random.randi_range(POWERUP_TYPE.SPEEDUP, POWERUP_TYPE.GEM)
+		#spawn.emit(x, y, type)
+		spawn_powerup(x, y, type)
+
+
+func spawn_powerup(x, y, type):
+	var powerup = preload(\"res://Instances/powerup.tscn\").instantiate()
+	powerup.position = Vector2(x, y)
+	powerup.type = type
+	add_sibling(powerup)
+	pass # Replace with function body.
+"
+
+[node name="PowerupSpawner" type="Node"]
+script = SubResource("GDScript_t3dg4")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
