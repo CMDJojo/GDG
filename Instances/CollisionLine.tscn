@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://dseeaipfhyptt"]
+
+[sub_resource type="GDScript" id="GDScript_60sgt"]
+resource_name = "CollisionLine"
+script/source = "extends Node2D
+
+var color = Color.WHITE
+
+func _ready():
+	get_node(\"Line2D\").default_color = color
+"
+
+[sub_resource type="GDScript" id="GDScript_vkbt8"]
+resource_name = "LineToCollision"
+script/source = "extends Line2D
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	var line_points = points
+	var line_count = len(points) - 1
+	
+	var staticBody = StaticBody2D.new()
+	
+	for i in range(line_count):
+		var segmentShape = SegmentShape2D.new()
+		segmentShape.set_a(line_points[i])
+		segmentShape.set_b(line_points[i + 1])
+	
+		var collision = CollisionShape2D.new()
+		collision.set_shape(segmentShape)
+		collision.set_one_way_collision_margin(width*2)
+		
+		staticBody.add_child(collision)
+		
+	add_child(staticBody)
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+	#for child in get_children():
+	#	print((child as CollisionShape2D).shape.a)
+"
+
+[node name="CollisionLine" type="Node2D"]
+script = SubResource("GDScript_60sgt")
+
+[node name="Line2D" type="Line2D" parent="."]
+script = SubResource("GDScript_vkbt8")
