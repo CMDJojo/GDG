@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cmyf6jebq27ra"]
 
-[ext_resource type="PackedScene" path="res://Instances/powerup.tscn" id="1_vrraf"]
+[ext_resource type="PackedScene" uid="uid://d2bcvmnyoi3gy" path="res://Instances/powerup.tscn" id="1_vrraf"]
 [ext_resource type="PackedScene" uid="uid://c3otevrfkc37e" path="res://Instances/Player.tscn" id="2_idvnc"]
-[ext_resource type="PackedScene" path="res://Instances/powerup_spawner.tscn" id="4_plpbc"]
+[ext_resource type="PackedScene" uid="uid://cyc76pviwiqja" path="res://Instances/powerup_spawner.tscn" id="4_plpbc"]
 
 [node name="TestScene" type="Node2D"]
 
@@ -22,3 +22,7 @@ time = 1
 min_x = -500
 min_y = -300
 max_y = 300
+
+[node name="Player2" parent="." instance=ExtResource("2_idvnc")]
+position = Vector2(156, -98)
+color = Color(1, 0, 0, 1)
