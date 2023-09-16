@@ -1,20 +1,34 @@
 [gd_scene load_steps=4 format=3 uid="uid://d2bcvmnyoi3gy"]
 
-[ext_resource type="Texture2D" uid="uid://hipfxkko321h" path="res://Images/powerup1.svg" id="1_w6p3y"]
+[ext_resource type="Texture2D" path="res://Images/powerup1.svg" id="1_w6p3y"]
 
 [sub_resource type="GDScript" id="GDScript_rqplj"]
 script/source = "extends Node2D
 
 enum POWERUP_TYPE {SPEEDUP, SLOWDOWN, GHOST, ERASER, GEM}
 
+@export var size: float = 100: set = set_size;
 @export var type: POWERUP_TYPE: set = set_type;
+
+func set_size(new_size):
+	size = new_size
+	update_size()
+
+func update_size():
+	#print(size)
+	get_node(\"StaticBody2D/CollisionShape2D\").shape.size = Vector2(size, size)
+	get_node(\"Sprite2D\").scale = Vector2(size / 100, size / 100)
+	pass
 
 func set_type(new_type):
 	type = new_type
 	init_texture()
+	update_size()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	init_texture()
+	update_size()
 	pass # Replace with function body.
 
 
@@ -24,11 +38,12 @@ func _process(delta):
 
 func _draw():
 	init_texture()
+	update_size()
 
 func init_texture():
 	var path = \"res://Images/\" + powerup_icon_name();
 	var texture = load(path)
-	$Sprite2D.texture = texture
+	get_node(\"Sprite2D\").texture = texture
 
 func powerup_icon_name():
 	if type == POWERUP_TYPE.SPEEDUP:

@@ -14,6 +14,7 @@ enum POWERUP_TYPE {SPEEDUP, SLOWDOWN, GHOST, ERASER, GEM}
 @export var max_x: int = 500
 @export var min_y: int = 0
 @export var max_y: int = 500
+@export var size: int = 100
 
 var random
 
@@ -45,6 +46,7 @@ func spawn_powerup(x, y, type):
 	var powerup = preload(\"res://Instances/powerup.tscn\").instantiate()
 	powerup.position = Vector2(x, y)
 	powerup.type = type
+	powerup.size = size
 	add_sibling(powerup)
 	pass # Replace with function body.
 "
