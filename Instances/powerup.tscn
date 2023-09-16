@@ -1,18 +1,39 @@
-[gd_scene load_steps=3 format=3 uid="uid://d2bcvmnyoi3gy"]
+[gd_scene load_steps=4 format=3 uid="uid://d2bcvmnyoi3gy"]
+
+[ext_resource type="Texture2D" uid="uid://cb6r1470c8kjb" path="res://Images/gem.svg" id="1_wj5a5"]
 
 [sub_resource type="GDScript" id="GDScript_rqplj"]
 script/source = "extends Node2D
 
-enum POWERUP_TYPE {SPEEDUP, SLOWDOWN, GHOST, ERASER, GEM}
+enum POWERUP_TYPE {SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM}
 
 @export var type: POWERUP_TYPE: set = set_type;
+@export var size: float = 100: set = set_size;
+
+var cooldown_target
+
+func set_size(new_size):
+	size = new_size
+	update_size()
+
+func update_size():
+	#print(size)
+	var cs = get_node(\"Area2D/CollisionShape2D\")
+	var s2 = get_node(\"Sprite2D\")
+	if cs != null && s2 != null:
+		cs.shape.size = Vector2(size, size)
+		s2.scale = Vector2(size / 100, size / 100)
+	pass
 
 func set_type(new_type):
 	type = new_type
 	init_texture()
+	update_size()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	init_texture()
+	update_size()
 	pass # Replace with function body.
 
 
@@ -22,22 +43,100 @@ func _process(delta):
 
 func _draw():
 	init_texture()
+	update_size()
 
 func init_texture():
 	var path = \"res://Images/\" + powerup_icon_name();
+	print(path)
 	var texture = load(path)
-	$Sprite2D.texture = texture
+	var node = get_node(\"Sprite2D\")
+	if node != null:
+		node.texture = texture
 
 func powerup_icon_name():
+	#SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM
 	if type == POWERUP_TYPE.SPEEDUP:
-		return \"powerup1.svg\"
-	else:
-		return \"powerup2.svg\"
+		return \"speedup_1.svg\"
+	elif type == POWERUP_TYPE.EVIL_SPEEDUP:
+		return \"speedup_2.svg\"
+	elif type == POWERUP_TYPE.SLOWDOWN:
+		return \"speeddown.svg\"
+	elif type == POWERUP_TYPE.GHOST:
+		return \"ghost.svg\"
+	elif type == POWERUP_TYPE.ERASER:
+		return \"eraser.svg\"
+	elif type == POWERUP_TYPE.STUN:
+		return \"snowflake.svg\"
+	elif type == POWERUP_TYPE.GEM:
+		return \"gem.svg\"
 
 func _on_area_2d_area_entered(area):
-	var player = area.get_parent()
-	if \"speed\" in player:
-		player.speed*=2
+	var player = area.get_parent();
+	if \"player_marker\" not in player:
+		return;
+	var other_player
+	var color = player.color;
+	
+	for x in player.get_parent().get_children():
+		if \"player_marker\" in x:
+			if x.color != color:
+				other_player = x
+	
+	if type == POWERUP_TYPE.SPEEDUP:
+		player.speed += 200
+		cooldown_target = player
+		prepare_cooldown(3)
+	elif type == POWERUP_TYPE.EVIL_SPEEDUP && other_player != null:
+		other_player.speed += 600
+		cooldown_target = other_player
+		prepare_cooldown(3)
+	elif type == POWERUP_TYPE.SLOWDOWN && other_player != null:
+		other_player.speed = 100
+		cooldown_target = other_player
+		prepare_cooldown(3)
+	elif type == POWERUP_TYPE.GHOST:
+		player.is_ghosted = true
+		cooldown_target = player
+		prepare_cooldown(5)
+		
+	elif type == POWERUP_TYPE.ERASER:
+		for x in player.get_children():
+			if \"line_marker\" in x:
+				player.remove_child(x)
+		
+		if other_player != null:
+			for x in other_player.get_children():
+				if \"line_marker\" in x:
+					other_player.remove_child(x)
+	
+	elif type == POWERUP_TYPE.STUN && other_player != null:
+		other_player.speed = 0
+		cooldown_target = other_player
+		prepare_cooldown(5)
+	
+	elif type == POWERUP_TYPE.GEM:
+		player.gems += 1
+		if player.gems == 2:
+			print(\"Player won!!\")
+
+func prepare_cooldown(time):
+	remove_child($Sprite2D)
+	remove_child($Area2D)
+	$Timer.start(time)
+
+
+func _on_timer_timeout():
+	if type == POWERUP_TYPE.SPEEDUP:
+		cooldown_target.speed -= 200
+	elif type == POWERUP_TYPE.EVIL_SPEEDUP:
+		cooldown_target.speed -= 600
+	elif type == POWERUP_TYPE.SLOWDOWN:
+		cooldown_target.speed = 200
+	elif type == POWERUP_TYPE.GHOST:
+		cooldown_target.is_ghosted = false
+	elif type == POWERUP_TYPE.STUN:
+		cooldown_target.speed = 200
+	pass # Replace with function body.
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ayirj"]
@@ -45,9 +144,11 @@ size = Vector2(100, 100)
 
 [node name="Powerup" type="Node2D"]
 script = SubResource("GDScript_rqplj")
+type = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(2.08165e-12, 2.08165e-12)
+texture = ExtResource("1_wj5a5")
 
 [node name="Area2D" type="Area2D" parent="."]
 
@@ -55,5 +156,8 @@ position = Vector2(2.08165e-12, 2.08165e-12)
 shape = SubResource("RectangleShape2D_ayirj")
 debug_color = Color(0, 0.596078, 0.729412, 0.419608)
 
+[node name="Timer" type="Timer" parent="."]
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -4,6 +4,7 @@
 resource_name = "CollisionLine"
 script/source = "extends Node2D
 
+@export var line_marker = \"___\"
 var color = Color.WHITE
 var i = 0
 

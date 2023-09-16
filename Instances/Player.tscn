@@ -7,11 +7,16 @@ script/source = "extends Node2D
 @export var color : Color
 @export var speed = 100
 @export var ang = PI
+@export var gems = 0
+@export var is_ghosted = false
+@export var player_marker = \"___\"
 
 const button = preload(\"res://Instances/Button.tscn\")
 
 # vid kollision
 func _on_area_2d_body_entered(body):
+	if is_ghosted:
+		return
 	var collisionLine = body.get_parent().get_parent()
 	if (body.get_parent() is Line2D):
 		var oppColor = body.get_parent().default_color
@@ -67,7 +72,8 @@ func move(delta):
 		var prevpos = get_owner().position
 		get_owner().position.x += delta*speed*cos(ang)
 		get_owner().position.y += delta*speed*(-sin(ang))
-		add_line(prevpos, get_owner().position)
+		if not get_parent().is_ghosted:
+			add_line(prevpos, get_owner().position)
 		
 func add_line(pos1, pos2):
 	var collisionLine = lineScene.instantiate()
