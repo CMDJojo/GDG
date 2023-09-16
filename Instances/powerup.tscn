@@ -7,6 +7,18 @@ enum POWERUP_TYPE {SPEEDUP, SLOWDOWN, GHOST, ERASER, GEM}
 
 @export var type: POWERUP_TYPE: set = set_type;
 
+var cooldown_target
+
+func set_size(new_size):
+	size = new_size
+	update_size()
+
+func update_size():
+	#print(size)
+	get_node(\"Area2D/CollisionShape2D\").shape.size = Vector2(size, size)
+	get_node(\"Sprite2D\").scale = Vector2(size / 100, size / 100)
+	pass
+
 func set_type(new_type):
 	type = new_type
 	init_texture()
@@ -35,9 +47,48 @@ func powerup_icon_name():
 		return \"powerup2.svg\"
 
 func _on_area_2d_area_entered(area):
-	var player = area.get_parent()
-	if \"speed\" in player:
-		player.speed*=2
+	var player = area.get_parent();
+	if \"player_marker\" not in player:
+		return;
+	var other_player
+	var color = player.color;
+	
+	for x in player.get_parent().get_children():
+		if \"player_marker\" in x:
+			if x.color != color:
+				other_player = x
+	
+	if type == POWERUP_TYPE.SPEEDUP:
+		player.speed += 200
+	elif type == POWERUP_TYPE.EVIL_SPEEDUP && other_player != null:
+		other_player.speed += 600
+	elif type == POWERUP_TYPE.SLOWDOWN && other_player != null:
+		other_player.speed = 100
+	elif type == POWERUP_TYPE.GHOST:
+		player.speed = 200
+		
+	elif type == POWERUP_TYPE.ERASER:
+		for x in player.get_children():
+			if \"line_marker\" in x:
+				player.remove_child(x)
+		
+		if other_player != null:
+			for x in other_player.get_children():
+				if \"line_marker\" in x:
+					other_player.remove_child(x)
+	
+	elif type == POWERUP_TYPE.STUN && other_player != null:
+		other_player.speed = 10
+	
+	elif type == POWERUP_TYPE.GEM:
+		player.gems += 1
+		if player.gems == 2:
+			print(\"Player won!!\")
+
+func prepare_cooldown(time):
+	remove_child($Sprite2D)
+	remove_child($Area2D)
+	$Timer.start(time)
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ayirj"]
@@ -54,6 +105,8 @@ position = Vector2(2.08165e-12, 2.08165e-12)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_ayirj")
 debug_color = Color(0, 0.596078, 0.729412, 0.419608)
+
+[node name="Timer" type="Timer" parent="."]
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
