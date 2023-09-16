@@ -35,27 +35,23 @@ func _process(delta):
 
 [node name="MainScene" type="Node2D"]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(27, 7)
-
 [node name="PowerupSpawner" parent="." instance=ExtResource("1_24vy0")]
 time = 3
-min_x = -500
-min_y = -300
-max_y = 300
+max_x = 1000
+max_y = 1000
 
 [node name="Player2" parent="." instance=ExtResource("2_t0p6b")]
-position = Vector2(405, 1)
+position = Vector2(980, 328)
 color = Color(1, 0, 0, 1)
 
 [node name="Player" parent="." instance=ExtResource("2_t0p6b")]
-position = Vector2(-368, 0)
+position = Vector2(240, 323)
 ang = 0.0
 
 [node name="Edge" type="Node" parent="."]
 
 [node name="Line2D" type="Line2D" parent="Edge"]
-position = Vector2(-546, 330)
+position = Vector2(13, 647)
 points = PackedVector2Array(0, 0, 1147, -1, 1147, -648, -8, -656, -1, -1)
 width = 7.0
 default_color = Color(1, 1, 1, 0)

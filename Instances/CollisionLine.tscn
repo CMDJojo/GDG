@@ -12,6 +12,9 @@ func _ready():
 
 func _process(delta):
 	i += delta
+
+func switch_color(newcolor):
+	get_node(\"Line2D\").default_color = newcolor
 "
 
 [sub_resource type="GDScript" id="GDScript_vkbt8"]
