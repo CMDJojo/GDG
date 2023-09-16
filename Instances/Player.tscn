@@ -1,0 +1,84 @@
+[gd_scene load_steps=4 format=3 uid="uid://c3otevrfkc37e"]
+
+[ext_resource type="Texture2D" uid="uid://dnglnku28v7oy" path="res://Images/icon.svg" id="1_mxk4j"]
+
+[sub_resource type="GDScript" id="GDScript_18544"]
+resource_name = "Player"
+script/source = "extends Node2D
+
+@export var color = Color.BLUE
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_cq1gd"]
+resource_name = "Controls"
+script/source = "extends Node
+
+var ang = 0
+var speed = 500
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	handle_input()
+	
+	get_owner().position.x += delta*speed*cos(ang)
+	get_owner().position.y += delta*speed*(-sin(ang))
+
+func handle_input():
+	var color = get_owner().color
+	var left : bool
+	var right : bool
+	var up : bool
+	var down : bool
+	if (color == Color.BLUE):
+		left = Input.is_action_pressed(\"P1left\")
+		right = Input.is_action_pressed(\"P1right\")
+		up = Input.is_action_pressed(\"P1up\")
+		down = Input.is_action_pressed(\"P1down\")
+	if (color == Color.RED):
+		left = Input.is_action_pressed(\"P2left\")
+		right = Input.is_action_pressed(\"P2right\")
+		up = Input.is_action_pressed(\"P2up\")
+		down = Input.is_action_pressed(\"P2down\")
+	
+	var minang = PI/4
+		
+	if left:
+		ang = 4*minang
+	if right:
+		ang = 0*minang
+	if up:
+		ang = 2*minang
+	if down:
+		ang = -2*minang
+	
+	if left and up:
+		ang = 3*minang
+	if right and up:
+		ang = 1*minang
+	if left and down:
+		ang = -3*minang
+	if right and down:
+		ang = -1*minang
+"
+
+[node name="Player" type="Node2D"]
+script = SubResource("GDScript_18544")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_mxk4j")
+
+[node name="Controls" type="Node" parent="."]
+script = SubResource("GDScript_cq1gd")
