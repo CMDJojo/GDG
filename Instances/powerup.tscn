@@ -23,9 +23,12 @@ func update_size():
 func set_type(new_type):
 	type = new_type
 	init_texture()
+	update_size()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	init_texture()
+	update_size()
 	pass # Replace with function body.
 
 
@@ -42,10 +45,21 @@ func init_texture():
 	$Sprite2D.texture = texture
 
 func powerup_icon_name():
+	#SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM
 	if type == POWERUP_TYPE.SPEEDUP:
-		return \"powerup1.svg\"
-	else:
-		return \"powerup2.svg\"
+		return \"speedup_1.svg\"
+	elif type == POWERUP_TYPE.EVIL_SPEEDUP:
+		return \"speedup_2.svg\"
+	elif type == POWERUP_TYPE.SLOWDOWN:
+		return \"speeddown.svg\"
+	elif type == POWERUP_TYPE.GHOST:
+		return \"ghost.svg\"
+	elif type == POWERUP_TYPE.ERASER:
+		return \"eraser.svg\"
+	elif type == POWERUP_TYPE.STUN:
+		return \"snowflake.svg\"
+	elif type == POWERUP_TYPE.GEM:
+		return \"gem.svg\"
 
 func _on_area_2d_area_entered(area):
 	var player = area.get_parent();
