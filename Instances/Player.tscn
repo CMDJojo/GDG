@@ -13,14 +13,14 @@ func _on_area_2d_body_entered(body):
 	if (body.get_parent() is Line2D):
 		var oppColor = body.get_parent().default_color
 		if color != oppColor or collisionLine.i > 100.0/speed:
-			queue_free()
+			speed = 0
 
 func _draw():
 	var area = get_node(\"Area2D\")
 	var shape = area.get_child(0).shape
 	var w = shape.extents.x
 	var h = shape.extents.y
-	draw_rect(Rect2(area.position - Vector2(w/2, h/2), shape.extents),color)
+	draw_rect(Rect2(area.position - Vector2(w, h), shape.extents*2),color)
 
 func switch_color(color):
 	color = Color.RED
@@ -98,7 +98,6 @@ func handle_input():
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xlvm6"]
-size = Vector2(45, 45)
 
 [node name="Player" type="Node2D"]
 script = SubResource("GDScript_18544")
