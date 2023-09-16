@@ -57,7 +57,7 @@ func add_line(pos1, pos2):
 	collisionLine.color = get_owner().color
 	var line = collisionLine.get_node(\"Line2D\")
 	line.points = [pos1, pos2]
-	get_tree().root.add_child(collisionLine)
+	add_child(collisionLine)
 
 func handle_input():
 	var color = get_owner().color

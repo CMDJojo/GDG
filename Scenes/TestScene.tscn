@@ -12,8 +12,9 @@ time = 3
 min_x = -500
 min_y = -300
 max_y = 300
-size = 40
 
 [node name="Player2" parent="." instance=ExtResource("2_idvnc")]
 position = Vector2(156, -98)
 color = Color(1, 0, 0, 1)
+
+[node name="Player" parent="." instance=ExtResource("2_idvnc")]
