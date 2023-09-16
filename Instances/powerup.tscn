@@ -1,45 +1,67 @@
 [gd_scene load_steps=4 format=3 uid="uid://d2bcvmnyoi3gy"]
 
-[ext_resource type="Texture2D" uid="uid://hipfxkko321h" path="res://Images/powerup1.svg" id="1_w6p3y"]
+[ext_resource type="Texture2D" path="res://Images/powerup1.svg" id="1_w6p3y"]
 
 [sub_resource type="GDScript" id="GDScript_rqplj"]
 script/source = "extends Node2D
 
-enum POWERUP_TYPE {SPEEDUP, SLOWDOWN, GHOST, ERASER, GEM}
+enum POWERUP_TYPE {SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM}
 
+@export var size: float = 100: set = set_size;
 @export var type: POWERUP_TYPE: set = set_type;
+
+func set_size(new_size):
+	size = new_size
+	update_size()
+
+func update_size():
+	#print(size)
+	get_node(\"StaticBody2D/CollisionShape2D\").shape.size = Vector2(size, size)
+	get_node(\"Sprite2D\").scale = Vector2(size / 100, size / 100)
+	pass
 
 func set_type(new_type):
 	type = new_type
 	init_texture()
+	update_size()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	init_texture()
+	update_size()
 	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 
 func _draw():
 	init_texture()
+	update_size()
 
 func init_texture():
 	var path = \"res://Images/\" + powerup_icon_name();
 	var texture = load(path)
-	$Sprite2D.texture = texture
+	get_node(\"Sprite2D\").texture = texture
 
 func powerup_icon_name():
+	#SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM
 	if type == POWERUP_TYPE.SPEEDUP:
-		return \"powerup1.svg\"
-	else:
-		return \"powerup2.svg\"
-
+		return \"speedup_1.svg\"
+	elif type == POWERUP_TYPE.EVIL_SPEEDUP:
+		return \"speedup_2.svg\"
+	elif type == POWERUP_TYPE.SLOWDOWN:
+		return \"speeddown.svg\"
+	elif type == POWERUP_TYPE.GHOST:
+		return \"ghost.svg\"
+	elif type == POWERUP_TYPE.ERASER:
+		return \"eraser.svg\"
+	elif type == POWERUP_TYPE.STUN:
+		return \"snowflake.svg\"
+	elif type == POWERUP_TYPE.GEM:
+		return \"snowflake.svg\"
+		
 func _on_area_2d_area_entered(area):
 	var player = area.get_parent()
 	if \"speed\" in player:
 		player.speed*=2
+		
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ayirj"]
@@ -48,15 +70,12 @@ size = Vector2(100, 100)
 [node name="Powerup" type="Node2D"]
 script = SubResource("GDScript_rqplj")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(2.08165e-12, 2.08165e-12)
-texture = ExtResource("1_w6p3y")
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
 
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("RectangleShape2D_ayirj")
 debug_color = Color(0, 0.596078, 0.729412, 0.419608)
 
-[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(2.08165e-12, 2.08165e-12)
+texture = ExtResource("1_w6p3y")

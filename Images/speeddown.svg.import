@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hipfxkko321h"
-path="res://.godot/imported/powerup1.svg-3bebb36959fcddb8a4cf1f273ff1a6a5.ctex"
+uid="uid://bh0b5b522gfxl"
+path="res://.godot/imported/speeddown.svg-d24eef6ddb15cf5b01fa763b9adbc1aa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Images/powerup1.svg"
-dest_files=["res://.godot/imported/powerup1.svg-3bebb36959fcddb8a4cf1f273ff1a6a5.ctex"]
+source_file="res://Images/speeddown.svg"
+dest_files=["res://.godot/imported/speeddown.svg-d24eef6ddb15cf5b01fa763b9adbc1aa.ctex"]
 
 [params]
 
