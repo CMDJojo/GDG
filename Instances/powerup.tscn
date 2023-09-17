@@ -5,7 +5,7 @@
 [sub_resource type="GDScript" id="GDScript_rqplj"]
 script/source = "extends Node2D
 
-enum POWERUP_TYPE {SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM}
+enum POWERUP_TYPE {SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, STUN}
 
 @export var type: POWERUP_TYPE: set = set_type;
 @export var size: float = 100: set = set_size;
@@ -47,7 +47,6 @@ func _draw():
 
 func init_texture():
 	var path = \"res://Images/\" + powerup_icon_name();
-	print(path)
 	var texture = load(path)
 	var node = get_node(\"Sprite2D\")
 	if node != null:
@@ -63,12 +62,12 @@ func powerup_icon_name():
 		return \"speeddown.svg\"
 	elif type == POWERUP_TYPE.GHOST:
 		return \"ghost.svg\"
-	elif type == POWERUP_TYPE.ERASER:
-		return \"eraser.svg\"
+	#elif type == POWERUP_TYPE.ERASER:
+	#	return \"eraser.svg\"
 	elif type == POWERUP_TYPE.STUN:
 		return \"snowflake.svg\"
-	elif type == POWERUP_TYPE.GEM:
-		return \"gem.svg\"
+	#elif type == POWERUP_TYPE.GEM:
+	#	return \"gem.svg\"
 
 func _on_area_2d_area_entered(area):
 	var player = area.get_parent();
@@ -99,25 +98,29 @@ func _on_area_2d_area_entered(area):
 		cooldown_target = player
 		prepare_cooldown(5)
 		
-	elif type == POWERUP_TYPE.ERASER:
-		for x in player.get_children():
-			if \"line_marker\" in x:
-				player.remove_child(x)
-		
-		if other_player != null:
-			for x in other_player.get_children():
-				if \"line_marker\" in x:
-					other_player.remove_child(x)
+	#elif type == POWERUP_TYPE.ERASER:
+	#	for x in player.get_children():
+	#		if \"line_marker\" in x:
+	#			player.remove_child(x)
+	#	
+	#	if other_player != null:
+	#		for x in other_player.get_children():
+	#			if \"line_marker\" in x:
+	#				other_player.remove_child(x)
 	
 	elif type == POWERUP_TYPE.STUN && other_player != null:
 		other_player.speed = 0
 		cooldown_target = other_player
 		prepare_cooldown(5)
 	
-	elif type == POWERUP_TYPE.GEM:
-		player.gems += 1
-		if player.gems == 2:
-			print(\"Player won!!\")
+	#elif type == POWERUP_TYPE.GEM:
+	#	player.gems += 1
+	#	if player.gems == 2:
+	#		player.speed = 0
+	#		if other_player != null:
+	#			other_player.die()
+	#		var i = preload(\"res://Instances/you_win_text.tscn\").instantiate()
+	#		add_sibling(i)
 			
 	remove_child($Sprite2D)
 	remove_child($Area2D)

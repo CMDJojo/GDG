@@ -36,7 +36,8 @@ func _process(delta):
 [node name="MainScene" type="Node2D"]
 
 [node name="PowerupSpawner" parent="." instance=ExtResource("1_24vy0")]
-time = 3
+time = 1
+probability = 0.7
 max_x = 1000
 max_y = 1000
 size = 30

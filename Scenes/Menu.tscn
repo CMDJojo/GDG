@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://qpe4me1dj7fl"]
 
-[ext_resource type="PackedScene" path="res://Instances/Button.tscn" id="1_i7qwq"]
+[ext_resource type="PackedScene" uid="uid://bc8iil00yulis" path="res://Instances/Button.tscn" id="1_i7qwq"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -17,7 +17,7 @@ offset_top = 241.0
 offset_right = 1004.0
 offset_bottom = 582.0
 theme_override_font_sizes/font_size = 100
-text = "Grab Dat Gem!"
+text = "Grab Dat Gap!"
 
 [node name="Button" parent="." instance=ExtResource("1_i7qwq")]
 position = Vector2(479, 459)

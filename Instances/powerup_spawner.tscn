@@ -6,7 +6,7 @@ script/source = "extends Node
 
 #signal spawn(x, y, type)
 
-enum POWERUP_TYPE {SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, ERASER, STUN, GEM}
+enum POWERUP_TYPE {SPEEDUP, EVIL_SPEEDUP, SLOWDOWN, GHOST, STUN}
 
 @export var time: int = 5
 @export var probability: float = 0.5
@@ -37,7 +37,7 @@ func _on_timer_timeout():
 	if r < probability:
 		var x = random.randf_range(min_x, max_x)
 		var y = random.randf_range(min_y, max_y)
-		var type = random.randi_range(POWERUP_TYPE.SPEEDUP, POWERUP_TYPE.GEM)
+		var type = random.randi_range(POWERUP_TYPE.SPEEDUP, POWERUP_TYPE.STUN)
 		#spawn.emit(x, y, type)
 		spawn_powerup(x, y, type)
 
